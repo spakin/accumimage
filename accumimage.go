@@ -73,6 +73,11 @@ func NewAccumNRGBA(r image.Rectangle) *AccumNRGBA {
 	}
 }
 
+// At returns the color of the pixel at (x, y) as a color.Color.
+func (p *AccumNRGBA) At(x, y int) color.Color {
+	return p.AccumNRGBAAt(x, y)
+}
+
 // AccumNRGBAAt returns the color of the pixel at (x, y) as an
 // accumcolor.AccumNRGBA.
 func (p *AccumNRGBA) AccumNRGBAAt(x, y int) accumcolor.AccumNRGBA {
