@@ -12,13 +12,38 @@ package accumcolor
 import "image/color"
 
 // An AccumNRGBA is a color.Color that supports accumulation of
-// non-alpha-premultiplied RGBA color values.
+// non-alpha-premultiplied RGBA color values.  An invariant maintained
+// by all methods is that either all fields are zero or each of R, G,
+// B, and A divided by Tally produces a value in the range [0, 255].
 type AccumNRGBA struct {
 	R     uint64
 	G     uint64
 	B     uint64
 	A     uint64
 	Tally uint64
+}
+
+// Valid returns true if and only if an AccumNRGBA is valid.
+func (c AccumNRGBA) Valid() bool {
+	// If Tally is nonzero, each other field divided by it must lie in [0,
+	// 255].
+	switch {
+	case c.Tally == 0:
+		// The only time a Tally is allowed to be zero is if all other
+		// fields are zero.
+		var zero AccumNRGBA
+		return c == zero
+	case c.R/c.Tally > 255:
+		return false
+	case c.G/c.Tally > 255:
+		return false
+	case c.B/c.Tally > 255:
+		return false
+	case c.A/c.Tally > 255:
+		return false
+	default:
+		return true
+	}
 }
 
 // RGBA convers an AccumNRGBA to alpha-premultiplied colors.

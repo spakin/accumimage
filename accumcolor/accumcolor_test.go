@@ -7,6 +7,56 @@ import (
 	"testing"
 )
 
+// TestValid ensures we can distinguish valid from invalid colors.
+func TestValid(t *testing.T) {
+	var c AccumNRGBA
+	if !c.Valid() {
+		t.Fatalf("expected %v to be valid, but it is deemed invalid", c)
+	}
+	c.G = 123
+	if c.Valid() {
+		t.Fatalf("expected %v to be invalid, but it is deemed valid", c)
+	}
+	c.Tally = 1
+	if !c.Valid() {
+		t.Fatalf("expected %v to be valid, but it is deemed invalid", c)
+	}
+	c = AccumNRGBA{
+		R:     255,
+		G:     255,
+		B:     255,
+		A:     255,
+		Tally: 1,
+	}
+	c.Tally = 1
+	if !c.Valid() {
+		t.Fatalf("expected %v to be valid, but it is deemed invalid", c)
+	}
+	c.B++
+	if c.Valid() {
+		t.Fatalf("expected %v to be invalid, but it is deemed valid", c)
+	}
+	c.R *= 2
+	if c.Valid() {
+		t.Fatalf("expected %v to be invalid, but it is deemed valid", c)
+	}
+	c.Tally = 2
+	if !c.Valid() {
+		t.Fatalf("expected %v to be valid, but it is deemed invalid", c)
+	}
+	const big = 34359738641 // Larger than 2^32
+	c = AccumNRGBA{
+		R:     255 * big,
+		G:     255 * big,
+		B:     255 * big,
+		A:     255 * big,
+		Tally: big,
+	}
+	if !c.Valid() {
+		t.Fatalf("expected %v to be valid, but it is deemed invalid", c)
+	}
+}
+
 // TestAdd ensures adding a number of colors produces the expected total.
 func TestAdd(t *testing.T) {
 	// Add up a large number of colors.
