@@ -84,6 +84,12 @@ func (p *AccumNRGBA) AccumNRGBAAt(x, y int) accumcolor.AccumNRGBA {
 	return accumcolor.AccumNRGBA{s[0], s[1], s[2], s[3], s[4]}
 }
 
+// NRGBAAt returns the color of the pixel at (x, y) as a color.NRGBA.
+func (p *AccumNRGBA) NRGBAAt(x, y int) color.NRGBA {
+	c := p.AccumNRGBAAt(x, y)
+	return color.NRGBAModel.Convert(c).(color.NRGBA)
+}
+
 // PixOffset returns the index of the first element of Pix that corresponds to
 // the pixel at (x, y).
 func (p *AccumNRGBA) PixOffset(x, y int) int {
