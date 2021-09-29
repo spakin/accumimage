@@ -7,9 +7,8 @@ import (
 	"testing"
 )
 
-// TestAccumNRGBAAdd ensures adding a number of colors produces the expected
-// total.
-func TestAccumNRGBAAdd(t *testing.T) {
+// TestAdd ensures adding a number of colors produces the expected total.
+func TestAdd(t *testing.T) {
 	// Add up a large number of colors.
 	const n = 5
 	var acc AccumNRGBA
@@ -46,5 +45,94 @@ func TestAccumNRGBAAdd(t *testing.T) {
 	exp = (n - 4) + 1
 	if acc.Tally != exp {
 		t.Fatalf("expected Tally = %d but saw %d", exp, acc.Tally)
+	}
+}
+
+// TestNRGBA1 ensures that averaging colors produces the expected result.
+func TestNRGBA1(t *testing.T) {
+	// Test exclusively even numbers.
+	c1 := AccumNRGBA{
+		R:     100,
+		G:     110,
+		B:     120,
+		A:     130,
+		Tally: 1,
+	}
+	c2 := AccumNRGBA{
+		R:     200,
+		G:     210,
+		B:     220,
+		A:     230,
+		Tally: 1,
+	}
+	var sumA AccumNRGBA
+	sumA.Add(c1)
+	sumA.Add(c2)
+	nrgba := sumA.NRGBA()
+	exp := color.NRGBA{
+		R: 150,
+		G: 160,
+		B: 170,
+		A: 180,
+	}
+	if nrgba != exp {
+		t.Fatalf("expected %v but saw %v", exp, nrgba)
+	}
+
+	// Confirm that halving an odd number rounds it down.
+	c2 = AccumNRGBA{
+		R:     201,
+		G:     211,
+		B:     221,
+		A:     231,
+		Tally: 1,
+	}
+	var sumB AccumNRGBA
+	sumB.Add(c1)
+	sumB.Add(c2)
+	nrgba = sumB.NRGBA()
+	if nrgba != exp {
+		t.Fatalf("expected %v but saw %v", exp, nrgba)
+	}
+}
+
+// TestNRGBA2 ensures that averaging colors produces the expected result.
+func TestNRGBA2(t *testing.T) {
+	c := color.NRGBA{
+		R: 0,
+		G: 128,
+		B: 254,
+		A: 255,
+	}
+	var sum AccumNRGBA
+	const n = 100000
+	for i := 0; i < n; i++ {
+		sum.Add(c)
+	}
+	nrgba := sum.NRGBA()
+	if nrgba != c {
+		t.Fatalf("expected %v but saw %v", c, nrgba)
+	}
+}
+
+// TestRGBA ensures that we can convert an AccumNRGBA to RGBA and back.
+func TestRGBA(t *testing.T) {
+	acc1 := AccumNRGBA{
+		R:     99,
+		G:     100,
+		B:     101,
+		A:     255,
+		Tally: 1,
+	}
+	r, g, b, a := acc1.RGBA()
+	rgba := color.RGBA{
+		R: uint8(r >> 8),
+		G: uint8(g >> 8),
+		B: uint8(b >> 8),
+		A: uint8(a >> 8),
+	}
+	acc2 := AccumNRGBAModel.Convert(rgba).(AccumNRGBA)
+	if acc2 != acc1 {
+		t.Fatalf("expected %v but saw %v", acc1, acc2)
 	}
 }
