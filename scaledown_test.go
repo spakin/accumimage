@@ -1,9 +1,11 @@
 // This file presents an example of using accumimage to scale down an image.
 
-package accumimage
+package accumimage_test
 
 import (
 	"image"
+
+	"github.com/spakin/accumimage"
 )
 
 // Scale down an arbitrary image (img) to given dimensions (newBnds), averaging
@@ -11,7 +13,7 @@ import (
 // newImg.Set were used instead of newImg.Add.
 func Example(img image.Image, newBnds image.Rectangle) {
 	// Create an AccumNRGBA image.
-	newImg := NewAccumNRGBA(newBnds)
+	newImg := accumimage.NewAccumNRGBA(newBnds)
 
 	// Acquire the dimensions of both the old and new images.
 	bnds := img.Bounds()
