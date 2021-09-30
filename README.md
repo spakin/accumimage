@@ -2,6 +2,7 @@ accumimage and accumcolor
 =========================
 
 [![Go project version](https://badge.fury.io/go/github.com%2Fspakin%2Faccumimage.svg)](https://badge.fury.io/go/github.com%2Fspakin%2Faccumimage)
+[![Go](https://github.com/spakin/accumimage/actions/workflows/go.yml/badge.svg)](https://github.com/spakin/accumimage/actions/workflows/go.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/spakin/accumimage)](https://goreportcard.com/report/github.com/spakin/accumimage)
 [![Go Reference](https://pkg.go.dev/badge/github.com/spakin/accumimage.svg)](https://pkg.go.dev/github.com/spakin/accumimage)
 
