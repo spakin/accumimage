@@ -10,7 +10,7 @@ import (
 )
 
 // Provide a variety of examples of valid and invalid AccumNRGBA values.
-func ExampleValid() {
+func ExampleAccumNRGBA_Valid() {
 	var c accumcolor.AccumNRGBA
 	fmt.Printf("%v --> %v\n", c, c.Valid())
 	c = accumcolor.AccumNRGBA{R: 0, G: 0, B: 0, A: 0, Tally: 1}
@@ -33,7 +33,7 @@ func ExampleValid() {
 }
 
 // Show how to average multiple NRGBA colors to produce a new NRGBA color.
-func ExampleNRGBA() {
+func ExampleAccumNRGBA_NRGBA() {
 	c1 := color.NRGBA{R: 150, G: 100, B: 40, A: 255}
 	c2 := color.NRGBA{R: 50, G: 40, B: 80, A: 255}
 	var c accumcolor.AccumNRGBA
