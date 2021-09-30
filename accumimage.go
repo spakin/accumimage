@@ -91,7 +91,7 @@ func (p *AccumNRGBA) AccumNRGBAAt(x, y int) accumcolor.AccumNRGBA {
 	}
 	i := p.PixOffset(x, y)
 	s := p.Pix[i : i+5 : i+5] // Small cap improves performance, see https://golang.org/issue/27857
-	return accumcolor.AccumNRGBA{s[0], s[1], s[2], s[3], s[4]}
+	return accumcolor.AccumNRGBA{R: s[0], G: s[1], B: s[2], A: s[3], Tally: s[4]}
 }
 
 // NRGBAAt returns the color of the pixel at (x, y) as a color.NRGBA.

@@ -2,12 +2,16 @@
 
 package accumimage_test
 
-import "github.com/spakin/accumimage"
+import (
+	"image"
+
+	"github.com/spakin/accumimage"
+)
 
 // Scale down an arbitrary image (img) to given dimensions (newBnds), averaging
 // colors that map to the same target pixel.  The result is smoother than if
 // newImg.Set were used instead of newImg.Add.
-func Example() {
+func Example(img image.Image, newBnds image.Rectangle) {
 	// Create an AccumNRGBA image.
 	newImg := accumimage.NewAccumNRGBA(newBnds)
 
@@ -26,5 +30,4 @@ func Example() {
 			newImg.Add(nx, ny, c) // Accumulate multiple colors into a single pixel.
 		}
 	}
-	return newImg
 }
