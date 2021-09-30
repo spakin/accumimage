@@ -1,5 +1,6 @@
 /*
-accumcolor provides support for colors that can be accumulated and averaged.
+Package accumcolor provides support for colors that can be accumulated
+and averaged.
 
 An AccumNRGBA is analogous to a color.NRGBA but additionally supports adding
 colors together.  It maintains a tally of the total number of colors that have
@@ -46,7 +47,7 @@ func (c AccumNRGBA) Valid() bool {
 	}
 }
 
-// RGBA convers an AccumNRGBA to alpha-premultiplied colors.
+// RGBA converts an AccumNRGBA to alpha-premultiplied colors.
 func (c AccumNRGBA) RGBA() (r, g, b, a uint32) {
 	if c.Tally == 0 {
 		return
