@@ -5,7 +5,7 @@ An AccumNRGBA is analogous to a color.NRGBA but additionally supports adding
 colors together.  It maintains a tally of the total number of colors that have
 been accumulated.  The Add method accumulates more color onto an existing
 AccumNRGBA.  The NRGBA method returns the average color of the entire
-accumulation as a color.NRGBa.
+accumulation as a color.NRGBA.
 */
 package accumcolor
 
