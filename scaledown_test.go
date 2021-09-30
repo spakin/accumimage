@@ -1,3 +1,5 @@
+// This file presents an example of using accumimage to scale down an image.
+
 package accumimage_test
 
 import "github.com/spakin/accumimage"
