@@ -4,23 +4,45 @@ package accumimage_test
 
 import (
 	"image"
+	"log"
+	"os"
 
 	"github.com/spakin/accumimage"
 )
 
-var img, imgA, imgB image.Image // Images used by examples
-var newBnds image.Rectangle     // Rectangle used by examples
+// readImage reads an image from a named file.
+func readImage(fn string) (image.Image, error) {
+	r, err := os.Open(fn)
+	if err != nil {
+		return nil, err
+	}
+	img, _, err := image.Decode(r)
+	if err != nil {
+		return nil, err
+	}
+	return img, nil
+}
 
 // Scale down an arbitrary image (img) to given dimensions (newBnds), averaging
 // colors that map to the same target pixel.  The result is smoother than if
 // newImg.Set were used instead of newImg.Add.
 func Example() {
-	// Create an AccumNRGBA image.
-	newImg := accumimage.NewAccumNRGBA(newBnds)
+	// Read an image from a file.
+	if len(os.Args) != 2 {
+		return
+	}
+	img, err := readImage(os.Args[1])
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	// Acquire the dimensions of both the old and new images.
+	// Choose (arbitrarily) to scale to 1/3 of the size in each of x and y.
 	bnds := img.Bounds()
 	wd, ht := bnds.Dx(), bnds.Dy()
+	newBnds := image.Rect(0, 0, wd/3, ht/3)
+
+	// Create an AccumNRGBA image.
+	newImg := accumimage.NewAccumNRGBA(newBnds)
 	nwd, nht := newBnds.Dx(), newBnds.Dy()
 
 	// Copy the image pixel-by-pixel, from (x, y) in the input image to
@@ -37,6 +59,19 @@ func Example() {
 
 // Blend two images to produce a third image.
 func ExampleAccumNRGBA_Add() {
+	// Read two images from files.
+	if len(os.Args) != 3 {
+		return
+	}
+	imgA, err := readImage(os.Args[1])
+	if err != nil {
+		log.Fatal(err)
+	}
+	imgB, err := readImage(os.Args[2])
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// Create an AccumNRGBA image imgC that's large enough to hold the
 	// overlap of input images imgA and imgB.
 	bndsA := imgA.Bounds()
