@@ -4,6 +4,7 @@ package accumimage_test
 
 import (
 	"image"
+	"image/png"
 	"log"
 	"os"
 
@@ -21,6 +22,16 @@ func readImage(fn string) (image.Image, error) {
 		return nil, err
 	}
 	return img, nil
+}
+
+// writeImage writes an image to a named file in PNG format.
+func writeImage(fn string, img image.Image) error {
+	w, err := os.Create(fn)
+	if err != nil {
+		return err
+	}
+	err = png.Encode(w, img)
+	return err
 }
 
 // Scale down an arbitrary image (img) to given dimensions (newBnds), averaging
@@ -54,6 +65,12 @@ func Example() {
 			c := img.At(x, y)
 			newImg.Add(nx, ny, c) // Accumulate multiple colors into a single pixel.
 		}
+	}
+
+	// Write the downscaled image to a file.
+	err = writeImage("image.png", newImg)
+	if err != nil {
+		log.Fatal(err)
 	}
 }
 
@@ -91,5 +108,11 @@ func ExampleAccumNRGBA_Add() {
 		for x := bndsB.Min.X; x < bndsB.Max.X; x++ {
 			imgC.Add(x, y, imgB.At(x, y))
 		}
+	}
+
+	// Write the blended image to a file.
+	err = writeImage("image.png", imgC)
+	if err != nil {
+		log.Fatal(err)
 	}
 }
