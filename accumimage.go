@@ -17,6 +17,9 @@ import (
 	"github.com/spakin/accumimage/accumcolor"
 )
 
+// NOTE: Many of the functions and methods in this file were copied verbatim or
+// nearly verbatim from the Go standard library (image/image.go).
+
 // An AccumNRGBA is an in-memory image whose At method returns accumcolor.NRGBA
 // values.
 type AccumNRGBA struct {
@@ -32,9 +35,6 @@ type AccumNRGBA struct {
 
 // mul3NonNeg returns (x * y * z), unless at least one argument is negative or
 // if the computation overflows the int type, in which case it returns -1.
-//
-// This function was copied verbatim from the Go standard library
-// (image/geom.go).
 func mul3NonNeg(x int, y int, z int) int {
 	if (x < 0) || (y < 0) || (z < 0) {
 		return -1
@@ -58,9 +58,6 @@ func mul3NonNeg(x int, y int, z int) int {
 // for the NewXxx functions. Conceptually, this is just (bpp * width * height),
 // but this function panics if at least one of those is negative or if the
 // computation would overflow the int type.
-//
-// This function was copied verbatim from the Go standard library
-// (image/image.go).
 func pixelBufferLength(bytesPerPixel int, r image.Rectangle, imageTypeName string) int {
 	totalLength := mul3NonNeg(bytesPerPixel, r.Dx(), r.Dy())
 	if totalLength < 0 {
@@ -241,4 +238,23 @@ func (p *AccumNRGBA) AddRGBA64(x, y int, c color.RGBA64) {
 	s[2] += uint64(b >> 8)
 	s[3] += uint64(a >> 8)
 	s[4]++
+}
+
+// SubImage returns an image representing the portion of the image p visible
+// through r. The returned value shares pixels with the original image.
+func (p *AccumNRGBA) SubImage(r image.Rectangle) image.Image {
+	r = r.Intersect(p.Rect)
+	// If r1 and r2 are Rectangles, r1.Intersect(r2) is not guaranteed to
+	// be inside either r1 or r2 if the intersection is empty. Without
+	// explicitly checking for this, the Pix[i:] expression below can
+	// panic.
+	if r.Empty() {
+		return &AccumNRGBA{}
+	}
+	i := p.PixOffset(r.Min.X, r.Min.Y)
+	return &AccumNRGBA{
+		Pix:    p.Pix[i:],
+		Stride: p.Stride,
+		Rect:   r,
+	}
 }
