@@ -90,6 +90,17 @@ func (c *AccumNRGBA) Add(clr color.Color) {
 	c.Tally += other.Tally
 }
 
+// Scale multiplies all components of an AccumNRGBA by a given value.  This
+// does not change the effective color but can be used for performing weighted
+// averages.
+func (c *AccumNRGBA) Scale(w uint64) {
+	c.R *= w
+	c.G *= w
+	c.B *= w
+	c.A *= w
+	c.Tally *= w
+}
+
 // NRGBA averages the accumulated color of an AccumNRGBA to produce an ordinary
 // color.NRGBA.
 func (c AccumNRGBA) NRGBA() color.NRGBA {

@@ -186,3 +186,50 @@ func TestRGBA(t *testing.T) {
 		t.Fatalf("expected %v but saw %v", acc1, acc2)
 	}
 }
+
+// TestScale ensures that a weighted sum of colors produces the expected total.
+func TestScale(t *testing.T) {
+	// Define pure red, green, and blue colors.
+	red := AccumNRGBA{
+		R:     255,
+		G:     0,
+		B:     0,
+		A:     255,
+		Tally: 1,
+	}
+	green := AccumNRGBA{
+		R:     0,
+		G:     255,
+		B:     0,
+		A:     255,
+		Tally: 1,
+	}
+	blue := AccumNRGBA{
+		R:     0,
+		G:     0,
+		B:     255,
+		A:     255,
+		Tally: 1,
+	}
+
+	// Average (2*red + 1*green + 0*blue)/3.
+	red.Scale(2)
+	green.Scale(1)
+	blue.Scale(0)
+	var sum AccumNRGBA
+	sum.Add(red)
+	sum.Add(green)
+	sum.Add(blue)
+
+	// Ensure we wound up with dark orange.
+	darkOrange := color.NRGBA{
+		R: 170,
+		G: 85,
+		B: 0,
+		A: 255,
+	}
+	nrgba := sum.NRGBA()
+	if nrgba != darkOrange {
+		t.Fatalf("expected %v but saw %v", darkOrange, nrgba)
+	}
+}
