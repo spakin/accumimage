@@ -7,8 +7,8 @@ import (
 	"testing"
 )
 
-// TestValid ensures we can distinguish valid from invalid colors.
-func TestValid(t *testing.T) {
+// TestNRGBAValid ensures we can distinguish valid from invalid colors.
+func TestNRGBAValid(t *testing.T) {
 	var c AccumNRGBA
 	if !c.Valid() {
 		t.Fatalf("expected %v to be valid, but it is deemed invalid", c)
@@ -57,8 +57,8 @@ func TestValid(t *testing.T) {
 	}
 }
 
-// TestAdd ensures adding a number of colors produces the expected total.
-func TestAdd(t *testing.T) {
+// TestNRGBAAdd ensures adding a number of colors produces the expected total.
+func TestNRGBAAdd(t *testing.T) {
 	// Add up a large number of colors.
 	const n = 5
 	var acc AccumNRGBA
@@ -165,8 +165,8 @@ func TestNRGBA2(t *testing.T) {
 	}
 }
 
-// TestRGBA ensures that we can convert an AccumNRGBA to RGBA and back.
-func TestRGBA(t *testing.T) {
+// TestNRGBARGBA ensures that we can convert an AccumNRGBA to RGBA and back.
+func TestNRGBARGBA(t *testing.T) {
 	acc1 := AccumNRGBA{
 		R:     99,
 		G:     100,
@@ -187,8 +187,9 @@ func TestRGBA(t *testing.T) {
 	}
 }
 
-// TestScale ensures that a weighted sum of colors produces the expected total.
-func TestScale(t *testing.T) {
+// TestNRGBAScale ensures that a weighted sum of colors produces the expected
+// total.
+func TestNRGBAScale(t *testing.T) {
 	// Define pure red, green, and blue colors.
 	red := AccumNRGBA{
 		R:     255,
