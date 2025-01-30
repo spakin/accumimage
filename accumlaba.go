@@ -48,10 +48,9 @@ func (p *AccumLabA) AccumLabAAt(x, y int) accumcolor.AccumLabA {
 }
 
 // ColorfulAt returns the color of the pixel at (x, y) as a fully opaque
-// colorful.Color.
+// colorful.Color (from the go-colorful package).
 func (p *AccumLabA) ColorfulAt(x, y int) colorful.Color {
-	c := p.AccumLabAAt(x, y).Average()
-	return colorful.Lab(c.L, c.A, c.B)
+	return p.AccumLabAAt(x, y).Colorful()
 }
 
 // Bounds returns the domain for which At can return non-zero color.

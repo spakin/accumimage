@@ -123,3 +123,10 @@ func (c AccumLabA) Average() AccumLabA {
 		Tally: 1,
 	}
 }
+
+// Colorful averages the accumulated color of an AccumLabA to produce a
+// colorful.Color (from the go-colorful package).
+func (c AccumLabA) Colorful() colorful.Color {
+	avg := c.Average()
+	return colorful.Lab(avg.L, avg.A, avg.B)
+}
