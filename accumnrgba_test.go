@@ -8,9 +8,9 @@ import (
 	"testing"
 )
 
-// TestAdd adds a number of colors together and checks the result.  It uses
-// NewAccumNRGBA and AccumNRGBA's Add and AccumNRGBAAt methods.
-func TestAdd(t *testing.T) {
+// TestNRGBAAdd1 adds a number of colors together and checks the result.  It
+// uses NewAccumNRGBA and AccumNRGBA's Add and AccumNRGBAAt methods.
+func TestNRGBAAdd1(t *testing.T) {
 	// Construct a row of colors.
 	img := NewAccumNRGBA(image.Rect(0, 0, 256, 1))
 
@@ -40,9 +40,9 @@ func TestAdd(t *testing.T) {
 	}
 }
 
-// TestNRGBA adds together different numbers of colors and checks that the
+// TestNRGBAAdd2 adds together different numbers of colors and checks that the
 // averages are as expected.
-func TestNRGBA(t *testing.T) {
+func TestNRGBAAdd2(t *testing.T) {
 	// Construct a column of colors.
 	const n = 100
 	img := NewAccumNRGBA(image.Rect(0, 0, 1, n))
