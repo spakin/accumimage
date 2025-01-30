@@ -1,12 +1,5 @@
-/*
-Package accumimage provides support for images whose colors that can be
-accumulated and averaged.  It is based on the color types defined in
-accumimage/accumcolor.  The core data type that accumimage defines is an
-AccumNRGBA, which implements the image.Image interface as well as the standard
-set of methods provided by the image package's image types.  In addition, each
-AccumNRGBA.Set* method has a corresponding AccumNRGBA.Add* method, which adds
-color to a pixel rather than replacing the pixel's color with a given color.
-*/
+// This file defines the AccumNRGBA type and associated methods.
+
 package accumimage
 
 import (
@@ -61,7 +54,7 @@ func mul3NonNeg(x int, y int, z int) int {
 func pixelBufferLength(bytesPerPixel int, r image.Rectangle, imageTypeName string) int {
 	totalLength := mul3NonNeg(bytesPerPixel, r.Dx(), r.Dy())
 	if totalLength < 0 {
-		panic("image: New" + imageTypeName + " Rectangle has huge or negative dimensions")
+		panic("accumimage: New" + imageTypeName + " Rectangle has huge or negative dimensions")
 	}
 	return totalLength
 }
