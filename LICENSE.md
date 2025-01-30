@@ -1,6 +1,6 @@
 The Clear BSD License
 
-Copyright © 2021 Scott Pakin  
+Copyright © 2021–2025 Scott Pakin
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted (subject to the limitations in the disclaimer below) provided that the following conditions are met:
