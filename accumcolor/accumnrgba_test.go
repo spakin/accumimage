@@ -1,4 +1,4 @@
-// This file defines a suite of tests for accumcolor.AccumNRGBA.
+// This file defines a suite of tests for accumcolor.NRGBA.
 
 package accumcolor
 
@@ -9,7 +9,7 @@ import (
 
 // TestNRGBAValid ensures we can distinguish valid from invalid colors.
 func TestNRGBAValid(t *testing.T) {
-	var c AccumNRGBA
+	var c NRGBA
 	if !c.Valid() {
 		t.Fatalf("expected %v to be valid, but it is deemed invalid", c)
 	}
@@ -21,7 +21,7 @@ func TestNRGBAValid(t *testing.T) {
 	if !c.Valid() {
 		t.Fatalf("expected %v to be valid, but it is deemed invalid", c)
 	}
-	c = AccumNRGBA{
+	c = NRGBA{
 		R:     255,
 		G:     255,
 		B:     255,
@@ -45,7 +45,7 @@ func TestNRGBAValid(t *testing.T) {
 		t.Fatalf("expected %v to be valid, but it is deemed invalid", c)
 	}
 	const big = 34359738641 // Larger than 2^32
-	c = AccumNRGBA{
+	c = NRGBA{
 		R:     255 * big,
 		G:     255 * big,
 		B:     255 * big,
@@ -61,7 +61,7 @@ func TestNRGBAValid(t *testing.T) {
 func TestNRGBAAdd(t *testing.T) {
 	// Add up a large number of colors.
 	const n = 5
-	var acc AccumNRGBA
+	var acc NRGBA
 	for r := uint8(0); r <= n-4; r++ {
 		g := r + 1
 		b := g + 1
@@ -101,21 +101,21 @@ func TestNRGBAAdd(t *testing.T) {
 // TestNRGBA1 ensures that averaging colors produces the expected result.
 func TestNRGBA1(t *testing.T) {
 	// Test exclusively even numbers.
-	c1 := AccumNRGBA{
+	c1 := NRGBA{
 		R:     100,
 		G:     110,
 		B:     120,
 		A:     130,
 		Tally: 1,
 	}
-	c2 := AccumNRGBA{
+	c2 := NRGBA{
 		R:     200,
 		G:     210,
 		B:     220,
 		A:     230,
 		Tally: 1,
 	}
-	var sumA AccumNRGBA
+	var sumA NRGBA
 	sumA.Add(c1)
 	sumA.Add(c2)
 	nrgba := sumA.NRGBA()
@@ -130,14 +130,14 @@ func TestNRGBA1(t *testing.T) {
 	}
 
 	// Confirm that halving an odd number rounds it down.
-	c2 = AccumNRGBA{
+	c2 = NRGBA{
 		R:     201,
 		G:     211,
 		B:     221,
 		A:     231,
 		Tally: 1,
 	}
-	var sumB AccumNRGBA
+	var sumB NRGBA
 	sumB.Add(c1)
 	sumB.Add(c2)
 	nrgba = sumB.NRGBA()
@@ -154,7 +154,7 @@ func TestNRGBA2(t *testing.T) {
 		B: 254,
 		A: 255,
 	}
-	var sum AccumNRGBA
+	var sum NRGBA
 	const n = 100000
 	for i := 0; i < n; i++ {
 		sum.Add(c)
@@ -165,9 +165,9 @@ func TestNRGBA2(t *testing.T) {
 	}
 }
 
-// TestNRGBARGBA ensures that we can convert an AccumNRGBA to RGBA and back.
+// TestNRGBARGBA ensures that we can convert an NRGBA to RGBA and back.
 func TestNRGBARGBA(t *testing.T) {
-	acc1 := AccumNRGBA{
+	acc1 := NRGBA{
 		R:     99,
 		G:     100,
 		B:     101,
@@ -181,7 +181,7 @@ func TestNRGBARGBA(t *testing.T) {
 		B: uint8(b >> 8),
 		A: uint8(a >> 8),
 	}
-	acc2 := AccumNRGBAModel.Convert(rgba).(AccumNRGBA)
+	acc2 := NRGBAModel.Convert(rgba).(NRGBA)
 	if acc2 != acc1 {
 		t.Fatalf("expected %v but saw %v", acc1, acc2)
 	}
@@ -191,21 +191,21 @@ func TestNRGBARGBA(t *testing.T) {
 // total.
 func TestNRGBAScale(t *testing.T) {
 	// Define pure red, green, and blue colors.
-	red := AccumNRGBA{
+	red := NRGBA{
 		R:     255,
 		G:     0,
 		B:     0,
 		A:     255,
 		Tally: 1,
 	}
-	green := AccumNRGBA{
+	green := NRGBA{
 		R:     0,
 		G:     255,
 		B:     0,
 		A:     255,
 		Tally: 1,
 	}
-	blue := AccumNRGBA{
+	blue := NRGBA{
 		R:     0,
 		G:     0,
 		B:     255,
@@ -217,7 +217,7 @@ func TestNRGBAScale(t *testing.T) {
 	red.Scale(2)
 	green.Scale(1)
 	blue.Scale(0)
-	var sum AccumNRGBA
+	var sum NRGBA
 	sum.Add(red)
 	sum.Add(green)
 	sum.Add(blue)

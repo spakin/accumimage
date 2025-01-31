@@ -1,4 +1,4 @@
-// This file defines a suite of tests for accumcolor.AccumLabA.
+// This file defines a suite of tests for accumcolor.LabA.
 
 package accumcolor
 
@@ -20,7 +20,7 @@ func compareFloats(t *testing.T, nm string, act, exp float64) {
 
 // TestLabAValid ensures we can distinguish valid from invalid colors.
 func TestLabAValid(t *testing.T) {
-	var c AccumLabA
+	var c LabA
 	if !c.Valid() {
 		t.Fatalf("expected %v to be valid, but it is deemed invalid", c)
 	}
@@ -32,7 +32,7 @@ func TestLabAValid(t *testing.T) {
 	if !c.Valid() {
 		t.Fatalf("expected %v to be valid, but it is deemed invalid", c)
 	}
-	c = AccumLabA{
+	c = LabA{
 		L:     1.0,
 		A:     -1.0,
 		B:     1.0,
@@ -56,7 +56,7 @@ func TestLabAValid(t *testing.T) {
 		t.Fatalf("expected %v to be valid, but it is deemed invalid", c)
 	}
 	const big = 34359738641 // Larger than 2^32
-	c = AccumLabA{
+	c = LabA{
 		L:     1.0 * big,
 		A:     1.0 * big,
 		B:     -1.0 * big,
@@ -72,7 +72,7 @@ func TestLabAValid(t *testing.T) {
 func TestLabAAdd(t *testing.T) {
 	// Add up a number of colors.
 	const n = 5
-	var acc AccumLabA
+	var acc LabA
 	var exp float64
 	for i := 0; i < n; i++ {
 		v := float64(i) / float64(n*2)
@@ -96,14 +96,14 @@ func TestLabAAdd(t *testing.T) {
 // TestLabAAverage ensures that averaging colors produces the expected result.
 func TestLabAAverage(t *testing.T) {
 	// Test repeatedly adding a color to itself.
-	exp := AccumLabA{
+	exp := LabA{
 		L:     0.25,
 		A:     -0.75,
 		B:     0.50,
 		Alpha: 250,
 		Tally: 1,
 	}
-	var sum AccumLabA
+	var sum LabA
 	for i := 0; i < 10; i++ {
 		sum.Add(exp)
 	}
@@ -119,7 +119,7 @@ func TestLabAAverage(t *testing.T) {
 	}
 }
 
-// TestLabAConvert ensures that we can convert to and from an AccumLabA.
+// TestLabAConvert ensures that we can convert to and from an LabA.
 func TestLabAConvert(t *testing.T) {
 	rgba := color.RGBA{
 		R: 0x22,
@@ -127,7 +127,7 @@ func TestLabAConvert(t *testing.T) {
 		B: 0x66,
 		A: 0x88,
 	}
-	laba := AccumLabAModel.Convert(rgba).(AccumLabA)
+	laba := LabAModel.Convert(rgba).(LabA)
 	rgba2 := color.RGBAModel.Convert(laba).(color.RGBA)
 	if rgba != rgba2 {
 		t.Fatalf("expected RGBA = %v but saw %v", rgba, rgba2)
@@ -138,9 +138,9 @@ func TestLabAConvert(t *testing.T) {
 // total.
 func TestLabAScale(t *testing.T) {
 	// Define pure red, green, and blue RGB colors.
-	convertRGB := func(r, g, b uint8) AccumLabA {
+	convertRGB := func(r, g, b uint8) LabA {
 		clr := color.RGBA{R: r, G: g, B: b, A: 255}
-		return AccumLabAModel.Convert(clr).(AccumLabA)
+		return LabAModel.Convert(clr).(LabA)
 	}
 	red := convertRGB(255, 0, 0)
 	green := convertRGB(0, 255, 0)
@@ -150,7 +150,7 @@ func TestLabAScale(t *testing.T) {
 	red.Scale(2)
 	green.Scale(1)
 	blue.Scale(0)
-	var sum AccumLabA
+	var sum LabA
 	sum.Add(red)
 	sum.Add(green)
 	sum.Add(blue)

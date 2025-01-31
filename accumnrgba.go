@@ -1,4 +1,4 @@
-// This file defines the AccumNRGBA type and associated methods.
+// This file defines the NRGBA type and associated methods.
 
 package accumimage
 
@@ -13,9 +13,9 @@ import (
 // NOTE: Many of the functions and methods in this file were copied verbatim or
 // nearly verbatim from the Go standard library (image/image.go).
 
-// An AccumNRGBA is an in-memory image whose At method returns accumcolor.NRGBA
+// An NRGBA is an in-memory image whose At method returns accumcolor.NRGBA
 // values.
-type AccumNRGBA struct {
+type NRGBA struct {
 	// Pix holds the image's pixels, in R, G, B, A, Tally order. The pixel
 	// at (x, y) starts at Pix[(y-Rect.Min.Y)*Stride + (x-Rect.Min.X)*5].
 	Pix []uint64
@@ -59,54 +59,54 @@ func pixelBufferLength(bytesPerPixel int, r image.Rectangle, imageTypeName strin
 	return totalLength
 }
 
-// NewAccumNRGBA returns a new AccumNRGBA image with the given bounds.
-func NewAccumNRGBA(r image.Rectangle) *AccumNRGBA {
-	return &AccumNRGBA{
-		Pix:    make([]uint64, pixelBufferLength(5, r, "AccumNRGBA")),
+// NewNRGBA returns a new NRGBA image with the given bounds.
+func NewNRGBA(r image.Rectangle) *NRGBA {
+	return &NRGBA{
+		Pix:    make([]uint64, pixelBufferLength(5, r, "NRGBA")),
 		Stride: 5 * r.Dx(),
 		Rect:   r,
 	}
 }
 
 // At returns the color of the pixel at (x, y) as a color.Color.
-func (p *AccumNRGBA) At(x, y int) color.Color {
-	return p.AccumNRGBAAt(x, y)
+func (p *NRGBA) At(x, y int) color.Color {
+	return p.NRGBAAt(x, y)
 }
 
-// AccumNRGBAAt returns the color of the pixel at (x, y) as an
-// accumcolor.AccumNRGBA.
-func (p *AccumNRGBA) AccumNRGBAAt(x, y int) accumcolor.AccumNRGBA {
+// NRGBAAt returns the color of the pixel at (x, y) as an
+// accumcolor.NRGBA.
+func (p *NRGBA) NRGBAAt(x, y int) accumcolor.NRGBA {
 	if !(image.Point{x, y}.In(p.Rect)) {
-		return accumcolor.AccumNRGBA{}
+		return accumcolor.NRGBA{}
 	}
 	i := p.PixOffset(x, y)
 	s := p.Pix[i : i+5 : i+5] // Small cap improves performance, see https://golang.org/issue/27857
-	return accumcolor.AccumNRGBA{R: s[0], G: s[1], B: s[2], A: s[3], Tally: s[4]}
+	return accumcolor.NRGBA{R: s[0], G: s[1], B: s[2], A: s[3], Tally: s[4]}
 }
 
-// NRGBAAt returns the color of the pixel at (x, y) as a color.NRGBA.
-func (p *AccumNRGBA) NRGBAAt(x, y int) color.NRGBA {
-	c := p.AccumNRGBAAt(x, y)
+// ColorNRGBAAt returns the color of the pixel at (x, y) as a color.NRGBA.
+func (p *NRGBA) ColorNRGBAAt(x, y int) color.NRGBA {
+	c := p.NRGBAAt(x, y)
 	return color.NRGBAModel.Convert(c).(color.NRGBA)
 }
 
 // PixOffset returns the index of the first element of Pix that corresponds to
 // the pixel at (x, y).
-func (p *AccumNRGBA) PixOffset(x, y int) int {
+func (p *NRGBA) PixOffset(x, y int) int {
 	return (y-p.Rect.Min.Y)*p.Stride + (x-p.Rect.Min.X)*5
 }
 
 // Bounds returns the domain for which At can return non-zero color.
-func (p *AccumNRGBA) Bounds() image.Rectangle { return p.Rect }
+func (p *NRGBA) Bounds() image.Rectangle { return p.Rect }
 
-// ColorModel returns the AccumNRGBA's color model (always
-// accumcolor.AccumNRGBAModel).
-func (p *AccumNRGBA) ColorModel() color.Model {
-	return accumcolor.AccumNRGBAModel
+// ColorModel returns the NRGBA's color model (always
+// accumcolor.NRGBAModel).
+func (p *NRGBA) ColorModel() color.Model {
+	return accumcolor.NRGBAModel
 }
 
 // Opaque scans the entire image and reports whether it is fully opaque.
-func (p *AccumNRGBA) Opaque() bool {
+func (p *NRGBA) Opaque() bool {
 	if p.Rect.Empty() {
 		return true
 	}
@@ -128,18 +128,18 @@ func (p *AccumNRGBA) Opaque() bool {
 }
 
 // RGBA64At returns the color of the pixel at (x, y) as a color.RGBA64.
-func (p *AccumNRGBA) RGBA64At(x, y int) color.RGBA64 {
-	r, g, b, a := p.AccumNRGBAAt(x, y).RGBA()
+func (p *NRGBA) RGBA64At(x, y int) color.RGBA64 {
+	r, g, b, a := p.NRGBAAt(x, y).RGBA()
 	return color.RGBA64{uint16(r), uint16(g), uint16(b), uint16(a)}
 }
 
 // Set sets the pixel at (x, y) to a given color of any type.
-func (p *AccumNRGBA) Set(x, y int, c color.Color) {
+func (p *NRGBA) Set(x, y int, c color.Color) {
 	if !(image.Point{x, y}.In(p.Rect)) {
 		return
 	}
 	i := p.PixOffset(x, y)
-	c1 := accumcolor.AccumNRGBAModel.Convert(c).(accumcolor.AccumNRGBA)
+	c1 := accumcolor.NRGBAModel.Convert(c).(accumcolor.NRGBA)
 	s := p.Pix[i : i+5 : i+5] // Small cap improves performance, see https://golang.org/issue/27857
 	s[0] = c1.R
 	s[1] = c1.G
@@ -149,12 +149,12 @@ func (p *AccumNRGBA) Set(x, y int, c color.Color) {
 }
 
 // Add accumulates a given color of any type to the pixel at (x, y).
-func (p *AccumNRGBA) Add(x, y int, c color.Color) {
+func (p *NRGBA) Add(x, y int, c color.Color) {
 	if !(image.Point{x, y}.In(p.Rect)) {
 		return
 	}
 	i := p.PixOffset(x, y)
-	c1 := accumcolor.AccumNRGBAModel.Convert(c).(accumcolor.AccumNRGBA)
+	c1 := accumcolor.NRGBAModel.Convert(c).(accumcolor.NRGBA)
 	s := p.Pix[i : i+5 : i+5] // Small cap improves performance, see https://golang.org/issue/27857
 	s[0] += c1.R
 	s[1] += c1.G
@@ -163,9 +163,9 @@ func (p *AccumNRGBA) Add(x, y int, c color.Color) {
 	s[4] += c1.Tally
 }
 
-// SetAccumNRGBA sets the pixel at (x, y) to a given color of type
-// accumcolor.AccumNRGBA.
-func (p *AccumNRGBA) SetAccumNRGBA(x, y int, c accumcolor.AccumNRGBA) {
+// SetNRGBA sets the pixel at (x, y) to a given color of type
+// accumcolor.NRGBA.
+func (p *NRGBA) SetNRGBA(x, y int, c accumcolor.NRGBA) {
 	if !(image.Point{x, y}.In(p.Rect)) {
 		return
 	}
@@ -178,9 +178,9 @@ func (p *AccumNRGBA) SetAccumNRGBA(x, y int, c accumcolor.AccumNRGBA) {
 	s[4] = c.Tally
 }
 
-// AddAccumNRGBA accumulates a given color of type accumcolor.AccumNRGBA to the
+// AddNRGBA accumulates a given color of type accumcolor.NRGBA to the
 // pixel at (x, y).
-func (p *AccumNRGBA) AddAccumNRGBA(x, y int, c accumcolor.AccumNRGBA) {
+func (p *NRGBA) AddNRGBA(x, y int, c accumcolor.NRGBA) {
 	if !(image.Point{x, y}.In(p.Rect)) {
 		return
 	}
@@ -194,7 +194,7 @@ func (p *AccumNRGBA) AddAccumNRGBA(x, y int, c accumcolor.AccumNRGBA) {
 }
 
 // SetRGBA64 sets the pixel at (x, y) to a given color of type color.RGBA64.
-func (p *AccumNRGBA) SetRGBA64(x, y int, c color.RGBA64) {
+func (p *NRGBA) SetRGBA64(x, y int, c color.RGBA64) {
 	if !(image.Point{x, y}.In(p.Rect)) {
 		return
 	}
@@ -214,7 +214,7 @@ func (p *AccumNRGBA) SetRGBA64(x, y int, c color.RGBA64) {
 }
 
 // AddRGBA64 accumulates a given color of type color.RGBA64 to the pixel at (x, y).
-func (p *AccumNRGBA) AddRGBA64(x, y int, c color.RGBA64) {
+func (p *NRGBA) AddRGBA64(x, y int, c color.RGBA64) {
 	if !(image.Point{x, y}.In(p.Rect)) {
 		return
 	}
@@ -235,17 +235,17 @@ func (p *AccumNRGBA) AddRGBA64(x, y int, c color.RGBA64) {
 
 // SubImage returns an image representing the portion of the image p visible
 // through r. The returned value shares pixels with the original image.
-func (p *AccumNRGBA) SubImage(r image.Rectangle) image.Image {
+func (p *NRGBA) SubImage(r image.Rectangle) image.Image {
 	r = r.Intersect(p.Rect)
 	// If r1 and r2 are Rectangles, r1.Intersect(r2) is not guaranteed to
 	// be inside either r1 or r2 if the intersection is empty. Without
 	// explicitly checking for this, the Pix[i:] expression below can
 	// panic.
 	if r.Empty() {
-		return &AccumNRGBA{}
+		return &NRGBA{}
 	}
 	i := p.PixOffset(r.Min.X, r.Min.Y)
-	return &AccumNRGBA{
+	return &NRGBA{
 		Pix:    p.Pix[i:],
 		Stride: p.Stride,
 		Rect:   r,

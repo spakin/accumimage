@@ -52,8 +52,8 @@ func Example() {
 	wd, ht := bnds.Dx(), bnds.Dy()
 	newBnds := image.Rect(0, 0, wd/3, ht/3)
 
-	// Create an AccumNRGBA image.
-	newImg := accumimage.NewAccumNRGBA(newBnds)
+	// Create an NRGBA image.
+	newImg := accumimage.NewNRGBA(newBnds)
 	nwd, nht := newBnds.Dx(), newBnds.Dy()
 
 	// Copy the image pixel-by-pixel, from (x, y) in the input image to
@@ -75,7 +75,7 @@ func Example() {
 }
 
 // Blend two images to produce a third image.
-func ExampleAccumNRGBA_Add() {
+func ExampleNRGBA_Add() {
 	// Read two images from files.
 	if len(os.Args) != 3 {
 		return
@@ -89,12 +89,12 @@ func ExampleAccumNRGBA_Add() {
 		log.Fatal(err)
 	}
 
-	// Create an AccumNRGBA image imgC that's large enough to hold the
+	// Create an NRGBA image imgC that's large enough to hold the
 	// overlap of input images imgA and imgB.
 	bndsA := imgA.Bounds()
 	bndsB := imgB.Bounds()
 	bndsC := bndsA.Union(bndsB)
-	imgC := accumimage.NewAccumNRGBA(bndsC)
+	imgC := accumimage.NewNRGBA(bndsC)
 
 	// Blend image A with image C.
 	for y := bndsA.Min.Y; y < bndsA.Max.Y; y++ {

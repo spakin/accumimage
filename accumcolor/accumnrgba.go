@@ -1,14 +1,14 @@
-// This file defines the AccumNRGBA type and associated methods.
+// This file defines the NRGBA type and associated methods.
 
 package accumcolor
 
 import "image/color"
 
-// An AccumNRGBA is a color.Color that supports accumulation of
-// non-alpha-premultiplied RGBA color values.  An invariant maintained
-// by all methods is that either all fields are zero or each of R, G,
-// B, and A divided by Tally produces a value in the range [0, 255].
-type AccumNRGBA struct {
+// An NRGBA is a color.Color that supports accumulation of
+// non-alpha-premultiplied RGBA color values.  An invariant maintained by all
+// methods is that either all fields are zero or each of R, G, B, and A divided
+// by Tally produces a value in the range [0, 255].
+type NRGBA struct {
 	R     uint64
 	G     uint64
 	B     uint64
@@ -16,15 +16,15 @@ type AccumNRGBA struct {
 	Tally uint64
 }
 
-// Valid returns true if and only if an AccumNRGBA is valid.
-func (c AccumNRGBA) Valid() bool {
+// Valid returns true if and only if an NRGBA is valid.
+func (c NRGBA) Valid() bool {
 	// If Tally is nonzero, each other field divided by it must lie in [0,
 	// 255].
 	switch {
 	case c.Tally == 0:
 		// The only time a Tally is allowed to be zero is if all other
 		// fields are zero.
-		var zero AccumNRGBA
+		var zero NRGBA
 		return c == zero
 	case c.R/c.Tally > 255:
 		return false
@@ -39,8 +39,8 @@ func (c AccumNRGBA) Valid() bool {
 	}
 }
 
-// RGBA converts an AccumNRGBA to alpha-premultiplied colors.
-func (c AccumNRGBA) RGBA() (r, g, b, a uint32) {
+// RGBA converts an NRGBA to alpha-premultiplied colors.
+func (c NRGBA) RGBA() (r, g, b, a uint32) {
 	if c.Tally == 0 {
 		return
 	}
@@ -54,13 +54,13 @@ func (c AccumNRGBA) RGBA() (r, g, b, a uint32) {
 	return
 }
 
-// accumNRGBAModel is used to define a color model for AccumNRGBA.
+// accumNRGBAModel is used to define a color model for NRGBA.
 func accumNRGBAModel(c color.Color) color.Color {
-	if _, ok := c.(AccumNRGBA); ok {
+	if _, ok := c.(NRGBA); ok {
 		return c
 	}
 	nrgba := color.NRGBAModel.Convert(c).(color.NRGBA)
-	return AccumNRGBA{
+	return NRGBA{
 		R:     uint64(nrgba.R),
 		G:     uint64(nrgba.G),
 		B:     uint64(nrgba.B),
@@ -69,12 +69,12 @@ func accumNRGBAModel(c color.Color) color.Color {
 	}
 }
 
-// AccumNRGBAModel converts any color.Color to an AccumNRGBA color.
-var AccumNRGBAModel = color.ModelFunc(accumNRGBAModel)
+// NRGBAModel converts any color.Color to an NRGBA color.
+var NRGBAModel = color.ModelFunc(accumNRGBAModel)
 
 // Add accumulates color.
-func (c *AccumNRGBA) Add(clr color.Color) {
-	other := AccumNRGBAModel.Convert(clr).(AccumNRGBA)
+func (c *NRGBA) Add(clr color.Color) {
+	other := NRGBAModel.Convert(clr).(NRGBA)
 	c.R += other.R
 	c.G += other.G
 	c.B += other.B
@@ -82,10 +82,9 @@ func (c *AccumNRGBA) Add(clr color.Color) {
 	c.Tally += other.Tally
 }
 
-// Scale multiplies all components of an AccumNRGBA by a given value.  This
-// does not change the effective color but can be used for performing weighted
-// averages.
-func (c *AccumNRGBA) Scale(w uint64) {
+// Scale multiplies all components of an NRGBA by a given value.  This does not
+// change the effective color but can be used for performing weighted averages.
+func (c *NRGBA) Scale(w uint64) {
 	c.R *= w
 	c.G *= w
 	c.B *= w
@@ -93,9 +92,9 @@ func (c *AccumNRGBA) Scale(w uint64) {
 	c.Tally *= w
 }
 
-// NRGBA averages the accumulated color of an AccumNRGBA to produce an ordinary
+// NRGBA averages the accumulated color of an NRGBA to produce an ordinary
 // color.NRGBA.
-func (c AccumNRGBA) NRGBA() color.NRGBA {
+func (c NRGBA) NRGBA() color.NRGBA {
 	if c.Tally == 0 {
 		return color.NRGBA{}
 	}

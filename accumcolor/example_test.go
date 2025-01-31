@@ -9,19 +9,19 @@ import (
 	"github.com/spakin/accumimage/accumcolor"
 )
 
-// Provide a variety of examples of valid and invalid AccumNRGBA values.
-func ExampleAccumNRGBA_Valid() {
-	var c accumcolor.AccumNRGBA
+// Provide a variety of examples of valid and invalid NRGBA values.
+func ExampleNRGBA_Valid() {
+	var c accumcolor.NRGBA
 	fmt.Printf("%v --> %v\n", c, c.Valid())
-	c = accumcolor.AccumNRGBA{R: 0, G: 0, B: 0, A: 0, Tally: 1}
+	c = accumcolor.NRGBA{R: 0, G: 0, B: 0, A: 0, Tally: 1}
 	fmt.Printf("%v --> %v\n", c, c.Valid())
-	c = accumcolor.AccumNRGBA{R: 255, G: 255, B: 255, A: 255, Tally: 1}
+	c = accumcolor.NRGBA{R: 255, G: 255, B: 255, A: 255, Tally: 1}
 	fmt.Printf("%v --> %v\n", c, c.Valid())
-	c = accumcolor.AccumNRGBA{R: 255, G: 255, B: 255, A: 255, Tally: 0}
+	c = accumcolor.NRGBA{R: 255, G: 255, B: 255, A: 255, Tally: 0}
 	fmt.Printf("%v --> %v\n", c, c.Valid())
-	c = accumcolor.AccumNRGBA{R: 2550, G: 1280, B: 640, A: 2550, Tally: 1}
+	c = accumcolor.NRGBA{R: 2550, G: 1280, B: 640, A: 2550, Tally: 1}
 	fmt.Printf("%v --> %v\n", c, c.Valid())
-	c = accumcolor.AccumNRGBA{R: 2550, G: 1280, B: 640, A: 2550, Tally: 10}
+	c = accumcolor.NRGBA{R: 2550, G: 1280, B: 640, A: 2550, Tally: 10}
 	fmt.Printf("%v --> %v\n", c, c.Valid())
 	// Output:
 	// {0 0 0 0 0} --> true
@@ -33,10 +33,10 @@ func ExampleAccumNRGBA_Valid() {
 }
 
 // Show how to average multiple NRGBA colors to produce a new NRGBA color.
-func ExampleAccumNRGBA_NRGBA() {
+func ExampleNRGBA_NRGBA() {
 	c1 := color.NRGBA{R: 150, G: 100, B: 40, A: 255}
 	c2 := color.NRGBA{R: 50, G: 40, B: 80, A: 255}
-	var c accumcolor.AccumNRGBA
+	var c accumcolor.NRGBA
 	c.Add(c1)
 	c.Add(c2)
 	fmt.Printf("The average of %v and %v is %v.\n", c1, c2, c.NRGBA())

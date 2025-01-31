@@ -1,4 +1,4 @@
-// This file defines a suite of tests for accumimage.AccumNRGBA.
+// This file defines a suite of tests for accumimage.NRGBA.
 
 package accumimage
 
@@ -9,10 +9,10 @@ import (
 )
 
 // TestNRGBAAdd1 adds a number of colors together and checks the result.  It
-// uses NewAccumNRGBA and AccumNRGBA's Add and AccumNRGBAAt methods.
+// uses NewNRGBA and NRGBA's Add and NRGBAAt methods.
 func TestNRGBAAdd1(t *testing.T) {
 	// Construct a row of colors.
-	img := NewAccumNRGBA(image.Rect(0, 0, 256, 1))
+	img := NewNRGBA(image.Rect(0, 0, 256, 1))
 
 	// Repeatedly add the same color to each pixel.
 	const n = 10
@@ -30,7 +30,7 @@ func TestNRGBAAdd1(t *testing.T) {
 
 	// Confirm that each value is as expected.
 	for i := uint64(0); i < 256; i++ {
-		c := img.AccumNRGBAAt(int(i), 0)
+		c := img.NRGBAAt(int(i), 0)
 		if c.Tally != n {
 			t.Fatalf("incorrect tally at position (%d, 0)", i)
 		}
@@ -45,7 +45,7 @@ func TestNRGBAAdd1(t *testing.T) {
 func TestNRGBAAdd2(t *testing.T) {
 	// Construct a column of colors.
 	const n = 100
-	img := NewAccumNRGBA(image.Rect(0, 0, 1, n))
+	img := NewNRGBA(image.Rect(0, 0, 1, n))
 
 	// Accumulate the most colors to the first pixel, less to the second,
 	// less to the third, and so forth.
@@ -63,7 +63,7 @@ func TestNRGBAAdd2(t *testing.T) {
 
 	// Confirm that each pixel contains the expected color.
 	for i := 0; i < n; i++ {
-		c := img.NRGBAAt(0, i)
+		c := img.ColorNRGBAAt(0, i)
 		base := uint8((n + i - 1) / 2)
 		exp := color.NRGBA{
 			R: base,

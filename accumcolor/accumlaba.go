@@ -1,4 +1,4 @@
-// This file defines the AccumLabA type and associated methods.
+// This file defines the LabA type and associated methods.
 
 package accumcolor
 
@@ -8,11 +8,11 @@ import (
 	"github.com/lucasb-eyer/go-colorful"
 )
 
-// An AccumLabA is a color.Color that supports accumulation of CIE L*a*b* color
+// A LabA is a color.Color that supports accumulation of CIE L*a*b* color
 // values.  An invariant maintained by all methods is that either all fields
 // are zero or each of L, A, B, and Alpha divided by Tally produces a value in
 // its target range.
-type AccumLabA struct {
+type LabA struct {
 	L     float64 // [0, 1]*Tally
 	A     float64 // [-1, 1]*Tally
 	B     float64 // [-1, 1]*Tally
@@ -20,12 +20,12 @@ type AccumLabA struct {
 	Tally uint64
 }
 
-// Valid returns true if and only if an AccumLabA is valid.
-func (c AccumLabA) Valid() bool {
+// Valid returns true if and only if a LabA is valid.
+func (c LabA) Valid() bool {
 	// The only time a Tally is allowed to be zero is if all other fields
 	// are zero.
 	if c.Tally == 0 {
-		var zero AccumLabA
+		var zero LabA
 		return c == zero
 	}
 
@@ -51,8 +51,8 @@ func (c AccumLabA) Valid() bool {
 	}
 }
 
-// RGBA converts an AccumLabA to alpha-premultiplied colors.
-func (c AccumLabA) RGBA() (r, g, b, a uint32) {
+// RGBA converts a LabA to alpha-premultiplied colors.
+func (c LabA) RGBA() (r, g, b, a uint32) {
 	if c.Tally == 0 {
 		return
 	}
@@ -66,15 +66,15 @@ func (c AccumLabA) RGBA() (r, g, b, a uint32) {
 	return
 }
 
-// accumLabAModel is used to define a color model for AccumLabA.
+// accumLabAModel is used to define a color model for LabA.
 func accumLabAModel(c color.Color) color.Color {
-	if _, ok := c.(AccumLabA); ok {
+	if _, ok := c.(LabA); ok {
 		return c
 	}
 	clr, _ := colorful.MakeColor(c)
 	L, a, b := clr.Lab()
 	_, _, _, alpha := c.RGBA()
-	return AccumLabA{
+	return LabA{
 		L:     L,
 		A:     a,
 		B:     b,
@@ -83,12 +83,12 @@ func accumLabAModel(c color.Color) color.Color {
 	}
 }
 
-// AccumLabAModel converts any color.Color to an AccumLabA color.
-var AccumLabAModel = color.ModelFunc(accumLabAModel)
+// LabAModel converts any color.Color to a LabA color.
+var LabAModel = color.ModelFunc(accumLabAModel)
 
 // Add accumulates color.
-func (c *AccumLabA) Add(clr color.Color) {
-	other := AccumLabAModel.Convert(clr).(AccumLabA)
+func (c *LabA) Add(clr color.Color) {
+	other := LabAModel.Convert(clr).(LabA)
 	c.L += other.L
 	c.A += other.A
 	c.B += other.B
@@ -96,10 +96,10 @@ func (c *AccumLabA) Add(clr color.Color) {
 	c.Tally += other.Tally
 }
 
-// Scale multiplies all components of an AccumLabA by a given value.  This
+// Scale multiplies all components of a LabA by a given value.  This
 // does not change the effective color but can be used for performing weighted
 // averages.
-func (c *AccumLabA) Scale(w uint64) {
+func (c *LabA) Scale(w uint64) {
 	w64 := float64(w)
 	c.L *= w64
 	c.A *= w64
@@ -108,14 +108,14 @@ func (c *AccumLabA) Scale(w uint64) {
 	c.Tally *= w
 }
 
-// Average averages the accumulated color of an AccumLabA to produce an
-// AccumLabA with a Tally of 1.
-func (c AccumLabA) Average() AccumLabA {
+// Average averages the accumulated color of a LabA to produce an
+// LabA with a Tally of 1.
+func (c LabA) Average() LabA {
 	if c.Tally == 0 {
-		return AccumLabA{}
+		return LabA{}
 	}
 	tally := float64(c.Tally)
-	return AccumLabA{
+	return LabA{
 		L:     c.L / tally,
 		A:     c.A / tally,
 		B:     c.B / tally,
@@ -124,9 +124,9 @@ func (c AccumLabA) Average() AccumLabA {
 	}
 }
 
-// Colorful averages the accumulated color of an AccumLabA to produce a
+// Colorful averages the accumulated color of a LabA to produce a
 // colorful.Color (from the go-colorful package).
-func (c AccumLabA) Colorful() colorful.Color {
+func (c LabA) Colorful() colorful.Color {
 	avg := c.Average()
 	return colorful.Lab(avg.L, avg.A, avg.B)
 }
