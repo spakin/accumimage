@@ -1,4 +1,4 @@
-module github.com/spakin/accumimage
+module github.com/spakin/accumimage/v2
 
 go 1.17
 

@@ -7,7 +7,7 @@ import (
 	"image/color"
 	"math/bits"
 
-	"github.com/spakin/accumimage/accumcolor"
+	"github.com/spakin/accumimage/v2/accumcolor"
 )
 
 // NOTE: Many of the functions and methods in this file were copied verbatim or

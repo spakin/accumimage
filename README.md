@@ -21,21 +21,21 @@ Usage
 
 Install `accumimage` and `accumcolor` with
 ```bash
-go get github.com/spakin/accumimage
+go get github.com/spakin/accumimage/v2
 ```
 
 then simply import `accumimage` and/or `accumimage/accumcolor` into your Go program:
 ```Go
 import (
-        "github.com/spakin/accumimage"
-        "github.com/spakin/accumimage/accumcolor"
+        "github.com/spakin/accumimage/v2"
+        "github.com/spakin/accumimage/v2/accumcolor"
 )
 ```
 
 Documentation
 -------------
 
-See the [pkg.go.dev documentation for `accumimage`](https://pkg.go.dev/github.com/spakin/accumimage) and [`accumcolor`](https://pkg.go.dev/github.com/spakin/accumimage/accumcolor).
+See the [pkg.go.dev documentation for `accumimage`](https://pkg.go.dev/github.com/spakin/accumimage/v2) and [`accumcolor`](https://pkg.go.dev/github.com/spakin/accumimage/v2/accumcolor).
 
 
 Author

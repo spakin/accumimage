@@ -7,7 +7,7 @@ import (
 	"image/color"
 
 	"github.com/lucasb-eyer/go-colorful"
-	"github.com/spakin/accumimage/accumcolor"
+	"github.com/spakin/accumimage/v2/accumcolor"
 )
 
 // A LabA is an in-memory image whose At method returns accumcolor.LabA values.

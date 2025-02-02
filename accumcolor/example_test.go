@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"image/color"
 
-	"github.com/spakin/accumimage/accumcolor"
+	"github.com/spakin/accumimage/v2/accumcolor"
 )
 
 // Provide a variety of examples of valid and invalid NRGBA values.

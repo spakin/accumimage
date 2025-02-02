@@ -7,7 +7,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/spakin/accumimage/accumcolor"
+	"github.com/spakin/accumimage/v2/accumcolor"
 )
 
 // TestLabAAdd adds a number of colors together and checks the result.  It uses

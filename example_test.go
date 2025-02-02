@@ -8,7 +8,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/spakin/accumimage"
+	"github.com/spakin/accumimage/v2"
 )
 
 // readImage reads an image from a named file.
